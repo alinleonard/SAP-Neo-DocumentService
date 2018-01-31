@@ -57,6 +57,31 @@ public class DocumentServiceServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
+		displayCommandsToHTML(response);
+		
+		String queryPath = request.getQueryString();
+		
+		response.getWriter().printf("(GET) Query string: %s", queryPath);
+		
+		if(request.getParameter("value") != null) {
+			response.getWriter().println("Value: " + request.getParameter("value"));
+		}
+
+	}
+	
+	private void displayCommandsToHTML(HttpServletResponse response) throws IOException {
+		StringBuilder content = new StringBuilder();
+		
+		content.append("<h3>Commands</h3>");
+		content.append("<div><b>display?=true</b></div>");
+		content.append("<q>Display the structure of the current repository.</q>");
+		content.append("<div><b>&content=fileName</b></div>");
+		content.append("<q>Display the content of the current file.</q>");
+		content.append("<div><b>&filder=file/content</b></div>");
+		content.append("<q>Filter in the repository the files or content with the search criteria</q>");
+		content.append("<div style='margin-top:10px'></div>");
+		
+		response.getWriter().println(content.toString());
 	}
 
 	/**
