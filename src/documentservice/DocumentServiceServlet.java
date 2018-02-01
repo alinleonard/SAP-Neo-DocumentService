@@ -58,30 +58,36 @@ public class DocumentServiceServlet extends HttpServlet {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
 		displayCommandsToHTML(response);
-		
-		String queryPath = request.getQueryString();
-		
-		response.getWriter().printf("(GET) Query string: %s", queryPath);
-		
-		if(request.getParameter("value") != null) {
-			response.getWriter().println("Value: " + request.getParameter("value"));
-		}
-
+		listenForParameters(request, response);
 	}
 	
-	private void displayCommandsToHTML(HttpServletResponse response) throws IOException {
+	private void displayCommandsToHTML(HttpServletResponse res) throws IOException {
 		StringBuilder content = new StringBuilder();
 		
 		content.append("<h3>Commands</h3>");
 		content.append("<div><b>display?=true</b></div>");
 		content.append("<q>Display the structure of the current repository.</q>");
-		content.append("<div><b>&content=fileName</b></div>");
+		content.append("<div><b>&dContent=fileName</b></div>");
 		content.append("<q>Display the content of the current file.</q>");
+		content.append("<div><b>&nFile=fileName&content=content</b></div>");
+		content.append("<q>Creates new file with the filename + content provided.</q>");
+		content.append("<div><b>&nFolder=folderName</b></div>");
+		content.append("<q>Creates new folder with the provided name.</q>");
 		content.append("<div><b>&filder=file/content</b></div>");
 		content.append("<q>Filter in the repository the files or content with the search criteria</q>");
 		content.append("<div style='margin-top:10px'></div>");
 		
-		response.getWriter().println(content.toString());
+		res.getWriter().println(content.toString());
+	}
+	
+	private void listenForParameters(HttpServletRequest req,HttpServletResponse res) throws IOException {
+		String queryPath = req.getQueryString();
+		
+		res.getWriter().printf("(GET) Query string: %s", queryPath);
+		
+		if(req.getParameter("display") != null) {
+			// do something
+		}
 	}
 
 	/**
