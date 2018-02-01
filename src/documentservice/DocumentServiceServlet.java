@@ -55,24 +55,30 @@ public class DocumentServiceServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		response.getWriter().append("<html><body>");
 		
 		displayCommandsToHTML(response);
 		listenForParameters(request, response);
+		
+		response.getWriter().append("</body></html>");
 	}
 	
 	private void displayCommandsToHTML(HttpServletResponse res) throws IOException {
 		StringBuilder content = new StringBuilder();
 		
 		content.append("<h3>Commands</h3>");
-		content.append("<div><b>display?=true</b></div>");
-		content.append("<q>Display the structure of the current repository.</q>");
+		content.append("<div><b>display?=folderPath</b></div>");
+		content.append("<ul><li>Display the structure of the current repository with the Folder Path you provide.</li>");
+		content.append("<li>eg: display?=/ or display?=/folderName</li></ul>");
 		content.append("<div><b>&dContent=fileName</b></div>");
 		content.append("<q>Display the content of the current file.</q>");
 		content.append("<div><b>&nFile=fileName&content=content</b></div>");
 		content.append("<q>Creates new file with the filename + content provided.</q>");
-		content.append("<div><b>&nFolder=folderName</b></div>");
-		content.append("<q>Creates new folder with the provided name.</q>");
+		content.append("<div><b>&nFolder=folderPath</b></div>");
+		content.append("<ul><li>Creates new folder with the provided name.</li>");
+		content.append("<li>eg: nFolder?=/ or nFolder?=/folderName</li></ul>");
 		content.append("<div><b>&filder=file/content</b></div>");
 		content.append("<q>Filter in the repository the files or content with the search criteria</q>");
 		content.append("<div style='margin-top:10px'></div>");
@@ -83,10 +89,20 @@ public class DocumentServiceServlet extends HttpServlet {
 	private void listenForParameters(HttpServletRequest req,HttpServletResponse res) throws IOException {
 		String queryPath = req.getQueryString();
 		
-		res.getWriter().printf("(GET) Query string: %s", queryPath);
+		res.getWriter().printf("(GET) 15:40 Query string: %s", queryPath);
 		
-		if(req.getParameter("display") != null) {
-			// do something
+		try {
+			if(req.getParameter("root") != null) {
+				DocumentServiceAdapter.displayFolderStructureOfRoot(res);
+			}
+			if(req.getParameter("display") != null) {
+				DocumentServiceAdapter.displayFolderStructure(res, req.getParameter("display"));
+			}
+			if(req.getParameter("nFolder") != null) {
+				DocumentServiceAdapter.createFolder(res, req.getParameter("nFolder"));
+			}
+		} catch (Exception e) {
+			res.getWriter().printf("Error: %s", e.getMessage());
 		}
 	}
 

@@ -50,3 +50,6 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+
+src/documentservice/Config.java
+build/classes/documentservice/Config.class
